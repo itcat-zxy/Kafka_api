@@ -48,6 +48,7 @@ public class KafkaProducerTest2 {
             // future.get();
             // System.out.println("第" + i + "条消息写入成功！");
 
+
             // 二、使用异步回调的方式发送消息
             ProducerRecord<String, String> producerRecord = new ProducerRecord<>("test1", null, i + "");
             kafkaProducer.send(producerRecord, new Callback() {

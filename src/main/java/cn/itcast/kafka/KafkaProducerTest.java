@@ -39,40 +39,14 @@ public class KafkaProducerTest {
 
         // 3. 发送1-100的消息到指定的topic中
         for(int i = 0; i < 10000000; ++i) {
-            // 一、使用同步等待的方式发送消息
-            // // 构建一条消息，直接new ProducerRecord
-            // ProducerRecord<String, String> producerRecord = new ProducerRecord<>("test", null, i + "");
-            // Future<RecordMetadata> future = kafkaProducer.send(producerRecord);
-            // // 调用Future的get方法等待响应
-            // future.get();
-            // System.out.println("第" + i + "条消息写入成功！");
+             // 一、使用同步等待的方式发送消息
+             // 构建一条消息，直接new ProducerRecord
+             ProducerRecord<String, String> producerRecord = new ProducerRecord<>("test", null, i + "");
+             Future<RecordMetadata> future = kafkaProducer.send(producerRecord);
+             // 调用Future的get方法等待响应
+             future.get();
+             System.out.println("第" + i + "条消息写入成功！");
 
-            // 二、使用异步回调的方式发送消息
-            ProducerRecord<String, String> producerRecord = new ProducerRecord<>("test_1m", null, i + "");
-            kafkaProducer.send(producerRecord, new Callback() {
-                @Override
-                public void onCompletion(RecordMetadata metadata, Exception exception) {
-                    // 1. 判断发送消息是否成功
-                    if(exception == null) {
-                        // 发送成功
-                        // 主题
-                        String topic = metadata.topic();
-                        // 分区id
-                        int partition = metadata.partition();
-                        // 偏移量
-                        long offset = metadata.offset();
-                        System.out.println("topic:" + topic + " 分区id：" + partition + " 偏移量：" + offset);
-                    }
-                    else {
-                        // 发送出现错误
-                        System.out.println("生产消息出现异常！");
-                        // 打印异常消息
-                        System.out.println(exception.getMessage());
-                        // 打印调用栈
-                        System.out.println(exception.getStackTrace());
-                    }
-                }
-            });
         }
 
         // 4.关闭生产者
